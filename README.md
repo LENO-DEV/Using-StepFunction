@@ -11,4 +11,5 @@
 - To Coordinate the task among Lambda Functions,
 - Less Code (task) in Lambda, therefore minimum execution time,
 - Only execute the functions, based upon new Users(email) else not.
+- SNS for,  distributing the workflow.
 - Lambda functions to send Email and store in DB based upon new User from client.
