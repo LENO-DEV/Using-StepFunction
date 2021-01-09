@@ -1,0 +1,52 @@
+{
+  "StartAt": "GetData",
+  "States": {
+    "GetData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:1xx3151xx11xxxx:function:p@@@-sub",
+      "Parameters": {
+        "email.$": "$.val.email"
+      },
+      "ResultPath": "$.value",
+      "Next": "Check_Value"
+    },
+    "Check_Value": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.value",
+          "IsNull": true,
+          "Next": "ContainsNull"
+        },
+        {
+          "Variable": "$.value.email",
+          "IsString": true,
+          "Next": "ContainsString"
+        }
+      ],
+      "Default": "DefaultState"
+    },
+    "ContainsString": {
+      "Type": "Fail",
+      "Comment": "Exists"
+    },
+    "ContainsNull": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:ap-south-1:1xx3151xx11xxxx:@@@-trigger",
+        "Message.$": "$.val",
+        "MessageAttributes": {
+          "customer": {
+            "DataType": "String",
+            "StringValue": "rugby"
+          }
+        }
+      },
+      "End": true
+    },
+    "DefaultState": {
+      "Type": "Succeed"
+    }
+  }
+}
